@@ -115,7 +115,7 @@ const GardenOfMessages = () => {
           {/* Interactive Garden */}
           <div className="relative min-h-[600px] md:min-h-[700px] bg-gradient-to-b from-green-50 to-green-100 rounded-2xl border-2 border-green-200 overflow-visible">
             {/* Background garden elements */}
-            <div className="absolute inset-0 opacity-20">
+            <div className="absolute inset-0 opacity-20 z-0">
               <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-green-200 to-transparent" />
               <div className="absolute top-10 left-10 text-4xl animate-gentle-sway">🌿</div>
               <div className="absolute top-20 right-20 text-3xl animate-gentle-sway" style={{ animationDelay: '1s' }}>🦋</div>
@@ -136,18 +136,18 @@ const GardenOfMessages = () => {
                 >
                   <div className="relative">
                     {/* Flower */}
-                    <div className={`w-12 h-12 md:w-16 md:h-16 rounded-full bg-gradient-to-br ${item.color} shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 ${openFlower === item.id ? 'scale-125' : ''} flex items-center justify-center animate-float`}>
+                    <div className={`w-12 h-12 md:w-16 md:h-16 rounded-full bg-gradient-to-br ${item.color} shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 ${openFlower === item.id ? 'scale-125' : ''} flex items-center justify-center animate-float relative z-20`}>
                       <Flower className="text-white w-6 h-6 md:w-8 md:h-8" />
                     </div>
                     
                     {/* Message Popup */}
                     {openFlower === item.id && (
                       <div className={`absolute ${positionClass} w-64 md:w-72 bg-warm-cream border-2 border-sunflower/50 rounded-lg p-4 shadow-xl z-50 animate-scale-in`}>
-                        <div className={`absolute ${tailClass} w-4 h-4 bg-warm-cream border-r-2 border-b-2 border-sunflower/50`} />
-                        <p className="font-handwritten text-coffee text-center leading-relaxed text-sm md:text-base">
+                        <div className={`absolute ${tailClass} w-4 h-4 bg-warm-cream border-r-2 border-b-2 border-sunflower/50 z-40`} />
+                        <p className="font-handwritten text-coffee text-center leading-relaxed text-sm md:text-base relative z-50">
                           {item.message}
                         </p>
-                        <div className="text-center mt-3">
+                        <div className="text-center mt-3 relative z-50">
                           <span className="text-sunflower text-lg">💛</span>
                         </div>
                       </div>
@@ -158,13 +158,13 @@ const GardenOfMessages = () => {
             })}
             
             {/* Garden Stream */}
-            <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-r from-blue-200 via-blue-300 to-blue-200 opacity-30 rounded-b-2xl">
+            <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-r from-blue-200 via-blue-300 to-blue-200 opacity-30 rounded-b-2xl z-0">
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-[shimmer_3s_ease-in-out_infinite]" />
             </div>
             
             {/* Floating elements */}
-            <div className="absolute top-1/4 right-1/4 text-xl md:text-2xl animate-float" style={{ animationDelay: '1.5s' }}>🐄</div>
-            <div className="absolute bottom-1/3 left-1/4 text-xl md:text-2xl animate-float" style={{ animationDelay: '2.5s' }}>🐟</div>
+            <div className="absolute top-1/4 right-1/4 text-xl md:text-2xl animate-float z-5" style={{ animationDelay: '1.5s' }}>🐄</div>
+            <div className="absolute bottom-1/3 left-1/4 text-xl md:text-2xl animate-float z-5" style={{ animationDelay: '2.5s' }}>🐟</div>
           </div>
           
           {/* Instructions */}
