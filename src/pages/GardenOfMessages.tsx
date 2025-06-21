@@ -58,27 +58,40 @@ const GardenOfMessages = () => {
     }
   ];
 
-  const getPopupPosition = (flowerId: number, flowerPosition: any) => {
-    // Adjust popup position based on flower location to prevent cutoff
+  const getPopupClasses = (flowerPosition: any) => {
     const left = parseFloat(flowerPosition.left);
     const top = parseFloat(flowerPosition.top);
     
-    let popupClass = "absolute bottom-20 left-1/2 transform -translate-x-1/2";
+    let positionClass = "";
+    let tailClass = "";
     
-    // If flower is on the right side, position popup to the left
-    if (left > 60) {
-      popupClass = "absolute bottom-20 right-0 transform translate-x-0";
-    }
-    // If flower is on the left side, position popup to the right
-    else if (left < 30) {
-      popupClass = "absolute bottom-20 left-0 transform translate-x-0";
-    }
-    // If flower is at the bottom, position popup above
-    if (top > 70) {
-      popupClass = popupClass.replace("bottom-20", "top-20");
+    // Determine horizontal position
+    if (left <= 25) {
+      // Far left - popup goes to the right
+      positionClass = "left-16 md:left-20";
+      tailClass = "left-4";
+    } else if (left >= 75) {
+      // Far right - popup goes to the left
+      positionClass = "right-16 md:right-20";
+      tailClass = "right-4";
+    } else {
+      // Center - popup centers on flower
+      positionClass = "left-1/2 transform -translate-x-1/2";
+      tailClass = "left-1/2 transform -translate-x-1/2";
     }
     
-    return popupClass;
+    // Determine vertical position
+    if (top >= 70) {
+      // Bottom flowers - popup appears above
+      positionClass += " bottom-16 md:bottom-20";
+      tailClass += " -bottom-2 rotate-45";
+    } else {
+      // Top/middle flowers - popup appears below
+      positionClass += " top-16 md:top-20";
+      tailClass += " -top-2 rotate-45";
+    }
+    
+    return { positionClass, tailClass };
   };
 
   return (
@@ -100,7 +113,7 @@ const GardenOfMessages = () => {
           </div>
           
           {/* Interactive Garden */}
-          <div className="relative min-h-[600px] md:min-h-[700px] bg-gradient-to-b from-green-50 to-green-100 rounded-2xl border-2 border-green-200 overflow-hidden">
+          <div className="relative min-h-[600px] md:min-h-[700px] bg-gradient-to-b from-green-50 to-green-100 rounded-2xl border-2 border-green-200 overflow-visible">
             {/* Background garden elements */}
             <div className="absolute inset-0 opacity-20">
               <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-green-200 to-transparent" />
@@ -111,34 +124,38 @@ const GardenOfMessages = () => {
             </div>
             
             {/* Interactive Flowers */}
-            {messages.map((item) => (
-              <div
-                key={item.id}
-                className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer z-10"
-                style={item.position}
-                onClick={() => setOpenFlower(openFlower === item.id ? null : item.id)}
-              >
-                <div className="relative">
-                  {/* Flower */}
-                  <div className={`w-12 h-12 md:w-16 md:h-16 rounded-full bg-gradient-to-br ${item.color} shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 ${openFlower === item.id ? 'scale-125' : ''} flex items-center justify-center animate-float`}>
-                    <Flower className="text-white w-6 h-6 md:w-8 md:h-8" />
-                  </div>
-                  
-                  {/* Message Popup */}
-                  {openFlower === item.id && (
-                    <div className={`${getPopupPosition(item.id, item.position)} w-64 md:w-72 bg-warm-cream border-2 border-sunflower/50 rounded-lg p-4 shadow-xl z-30 animate-scale-in`}>
-                      <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-warm-cream border-r-2 border-b-2 border-sunflower/50 rotate-45" />
-                      <p className="font-handwritten text-coffee text-center leading-relaxed text-sm md:text-base">
-                        {item.message}
-                      </p>
-                      <div className="text-center mt-3">
-                        <span className="text-sunflower text-lg">💛</span>
-                      </div>
+            {messages.map((item) => {
+              const { positionClass, tailClass } = getPopupClasses(item.position);
+              
+              return (
+                <div
+                  key={item.id}
+                  className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer z-10"
+                  style={item.position}
+                  onClick={() => setOpenFlower(openFlower === item.id ? null : item.id)}
+                >
+                  <div className="relative">
+                    {/* Flower */}
+                    <div className={`w-12 h-12 md:w-16 md:h-16 rounded-full bg-gradient-to-br ${item.color} shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 ${openFlower === item.id ? 'scale-125' : ''} flex items-center justify-center animate-float`}>
+                      <Flower className="text-white w-6 h-6 md:w-8 md:h-8" />
                     </div>
-                  )}
+                    
+                    {/* Message Popup */}
+                    {openFlower === item.id && (
+                      <div className={`absolute ${positionClass} w-64 md:w-72 bg-warm-cream border-2 border-sunflower/50 rounded-lg p-4 shadow-xl z-50 animate-scale-in`}>
+                        <div className={`absolute ${tailClass} w-4 h-4 bg-warm-cream border-r-2 border-b-2 border-sunflower/50`} />
+                        <p className="font-handwritten text-coffee text-center leading-relaxed text-sm md:text-base">
+                          {item.message}
+                        </p>
+                        <div className="text-center mt-3">
+                          <span className="text-sunflower text-lg">💛</span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
             
             {/* Garden Stream */}
             <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-r from-blue-200 via-blue-300 to-blue-200 opacity-30 rounded-b-2xl">
