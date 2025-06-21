@@ -58,6 +58,29 @@ const GardenOfMessages = () => {
     }
   ];
 
+  const getPopupPosition = (flowerId: number, flowerPosition: any) => {
+    // Adjust popup position based on flower location to prevent cutoff
+    const left = parseFloat(flowerPosition.left);
+    const top = parseFloat(flowerPosition.top);
+    
+    let popupClass = "absolute bottom-20 left-1/2 transform -translate-x-1/2";
+    
+    // If flower is on the right side, position popup to the left
+    if (left > 60) {
+      popupClass = "absolute bottom-20 right-0 transform translate-x-0";
+    }
+    // If flower is on the left side, position popup to the right
+    else if (left < 30) {
+      popupClass = "absolute bottom-20 left-0 transform translate-x-0";
+    }
+    // If flower is at the bottom, position popup above
+    if (top > 70) {
+      popupClass = popupClass.replace("bottom-20", "top-20");
+    }
+    
+    return popupClass;
+  };
+
   return (
     <div className="min-h-screen relative">
       <Navigation />
@@ -77,7 +100,7 @@ const GardenOfMessages = () => {
           </div>
           
           {/* Interactive Garden */}
-          <div className="relative min-h-[600px] bg-gradient-to-b from-green-50 to-green-100 rounded-2xl border-2 border-green-200 overflow-hidden">
+          <div className="relative min-h-[600px] md:min-h-[700px] bg-gradient-to-b from-green-50 to-green-100 rounded-2xl border-2 border-green-200 overflow-hidden">
             {/* Background garden elements */}
             <div className="absolute inset-0 opacity-20">
               <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-green-200 to-transparent" />
@@ -91,21 +114,21 @@ const GardenOfMessages = () => {
             {messages.map((item) => (
               <div
                 key={item.id}
-                className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer"
+                className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer z-10"
                 style={item.position}
                 onClick={() => setOpenFlower(openFlower === item.id ? null : item.id)}
               >
                 <div className="relative">
                   {/* Flower */}
-                  <div className={`w-16 h-16 rounded-full bg-gradient-to-br ${item.color} shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 ${openFlower === item.id ? 'scale-125' : ''} flex items-center justify-center animate-float`}>
-                    <Flower className="text-white w-8 h-8" />
+                  <div className={`w-12 h-12 md:w-16 md:h-16 rounded-full bg-gradient-to-br ${item.color} shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 ${openFlower === item.id ? 'scale-125' : ''} flex items-center justify-center animate-float`}>
+                    <Flower className="text-white w-6 h-6 md:w-8 md:h-8" />
                   </div>
                   
                   {/* Message Popup */}
                   {openFlower === item.id && (
-                    <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 w-72 bg-warm-cream border-2 border-sunflower/50 rounded-lg p-4 shadow-xl z-20 animate-scale-in">
+                    <div className={`${getPopupPosition(item.id, item.position)} w-64 md:w-72 bg-warm-cream border-2 border-sunflower/50 rounded-lg p-4 shadow-xl z-30 animate-scale-in`}>
                       <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-warm-cream border-r-2 border-b-2 border-sunflower/50 rotate-45" />
-                      <p className="font-handwritten text-coffee text-center leading-relaxed">
+                      <p className="font-handwritten text-coffee text-center leading-relaxed text-sm md:text-base">
                         {item.message}
                       </p>
                       <div className="text-center mt-3">
@@ -123,8 +146,8 @@ const GardenOfMessages = () => {
             </div>
             
             {/* Floating elements */}
-            <div className="absolute top-1/4 right-1/4 text-2xl animate-float" style={{ animationDelay: '1.5s' }}>🐄</div>
-            <div className="absolute bottom-1/3 left-1/4 text-2xl animate-float" style={{ animationDelay: '2.5s' }}>🐟</div>
+            <div className="absolute top-1/4 right-1/4 text-xl md:text-2xl animate-float" style={{ animationDelay: '1.5s' }}>🐄</div>
+            <div className="absolute bottom-1/3 left-1/4 text-xl md:text-2xl animate-float" style={{ animationDelay: '2.5s' }}>🐟</div>
           </div>
           
           {/* Instructions */}
